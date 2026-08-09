@@ -1,0 +1,77 @@
+asyncapi: 3.0.0
+
+info:
+  title: Payment Service Events
+  version: 1.0.0
+  description: >
+    Events published by the Payment Service.
+
+servers:
+  rabbitmq:
+    host: localhost:5672
+    protocol: amqp
+    description: Local RabbitMQ broker
+
+channels:
+
+  paymentStatusChanged:
+    address: payment.status.changed
+    messages:
+      PaymentStatusChanged:
+        $ref: '#/components/messages/PaymentStatusChanged'
+
+operations:
+
+  publishPaymentStatusChanged:
+    action: send
+    channel:
+      $ref: '#/channels/paymentStatusChanged'
+    summary: Publish payment status changed event
+
+components:
+
+  messages:
+
+    PaymentStatusChanged:
+      name: PaymentStatusChanged
+      title: Payment status changed
+      summary: Event emitted when a payment status changes
+      payload:
+        $ref: '#/components/schemas/PaymentStatusChangedEvent'
+
+  schemas:
+
+    PaymentStatusChangedEvent:
+      type: object
+      required:
+        - paymentId
+        - status
+        - occurredAt
+
+      properties:
+
+        paymentId:
+          type: integer
+          format: int64
+          description: Identifier of the payment whose status changed
+          example: 1
+
+        status:
+          $ref: '#/components/schemas/PaymentStatus'
+
+        occurredAt:
+          type: string
+          format: date-time
+          description: Date and time when the status change occurred
+          example: '2026-08-09T19:30:00Z'
+
+    PaymentStatus:
+      type: string
+      description: Payment status
+      enum:
+        - PENDING
+        - PROCESSING
+        - COMPLETED
+        - REJECTED
+        - CANCELLED
+      example: COMPLETED

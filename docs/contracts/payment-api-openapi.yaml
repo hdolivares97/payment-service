@@ -1,0 +1,267 @@
+openapi: 3.0.3
+
+info:
+  title: Payment Service API
+  version: 1.0.0
+  description: >
+    API for creating payments, retrieving payment status,
+    and updating payment status.
+
+servers:
+  - url: http://localhost:8080
+
+tags:
+  - name: Payments
+    description: Payment operations
+
+paths:
+
+  /api/v1/payments:
+    post:
+      tags:
+        - Payments
+      summary: Create a payment
+      operationId: createPayment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePaymentRequest'
+      responses:
+
+        '201':
+          description: Payment created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatePaymentResponse'
+
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: INVALID_REQUEST
+                message: Invalid request
+
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: INTERNAL_ERROR
+                message: An unexpected error occurred
+
+
+  /api/v1/payments/{paymentId}/status:
+    get:
+      tags:
+        - Payments
+      summary: Get payment status
+      operationId: getPaymentStatus
+      parameters:
+        - $ref: '#/components/parameters/PaymentId'
+      responses:
+
+        '200':
+          description: Payment status retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentStatusResponse'
+
+        '400':
+          description: Invalid payment identifier
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: INVALID_REQUEST
+                message: Invalid payment identifier
+
+        '404':
+          description: Payment not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: PAYMENT_NOT_FOUND
+                message: Payment with id 999 was not found
+
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: INTERNAL_ERROR
+                message: An unexpected error occurred
+
+    patch:
+      tags:
+        - Payments
+      summary: Update payment status
+      operationId: updatePaymentStatus
+      parameters:
+        - $ref: '#/components/parameters/PaymentId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatePaymentStatusRequest'
+      responses:
+
+        '204':
+          description: Payment status updated successfully
+
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: INVALID_REQUEST
+                message: Invalid request
+
+        '404':
+          description: Payment not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: PAYMENT_NOT_FOUND
+                message: Payment with id 999 was not found
+
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example:
+                code: INTERNAL_ERROR
+                message: An unexpected error occurred
+
+components:
+  parameters:
+    PaymentId:
+      name: paymentId
+      in: path
+      required: true
+      description: Payment identifier
+      schema:
+        type: integer
+        format: int64
+        minimum: 1
+      example: 1
+
+  schemas:
+    CreatePaymentRequest:
+      type: object
+      required:
+        - concept
+        - payer
+        - payee
+        - amount
+        - status
+
+      properties:
+        concept:
+          type: string
+          minLength: 1
+          maxLength: 255
+          description: Payment concept
+          example: Invoice payment
+
+        payer:
+          type: string
+          minLength: 1
+          maxLength: 255
+          description: Person or entity making the payment
+          example: Company A
+
+        payee:
+          type: string
+          minLength: 1
+          maxLength: 255
+          description: Person or entity receiving the payment
+          example: Supplier B
+
+        amount:
+          type: number
+          minimum: 0
+          exclusiveMinimum: true
+          description: Monetary amount of the payment
+          example: 1500.50
+
+        status:
+          $ref: '#/components/schemas/PaymentStatus'
+
+    CreatePaymentResponse:
+      type: object
+      required:
+        - paymentId
+
+      properties:
+        paymentId:
+          type: integer
+          format: int64
+          description: Identifier assigned to the created payment
+          example: 1
+
+    PaymentStatusResponse:
+      type: object
+      required:
+        - paymentId
+        - status
+      properties:
+        paymentId:
+          type: integer
+          format: int64
+          description: Payment identifier
+          example: 1
+        status:
+          $ref: '#/components/schemas/PaymentStatus'
+
+    UpdatePaymentStatusRequest:
+      type: object
+      required:
+        - status
+      properties:
+        status:
+          $ref: '#/components/schemas/PaymentStatus'
+
+    PaymentStatus:
+      type: string
+      description: Payment status
+      enum:
+        - PENDING
+        - PROCESSING
+        - COMPLETED
+        - REJECTED
+        - CANCELLED
+      example: PENDING
+
+    ErrorResponse:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+          description: Application error code
+        message:
+          type: string
+          description: Error description
