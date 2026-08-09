@@ -1,0 +1,14 @@
+CREATE DATABASE IF NOT EXISTS payment_db;
+
+USE payment_db;
+
+CREATE TABLE IF NOT EXISTS payments (
+    id BIGINT NOT NULL AUTO_INCREMENT,
+    concept VARCHAR(255) NOT NULL,
+    payer VARCHAR(255) NOT NULL,
+    payee VARCHAR(255) NOT NULL,
+    amount DECIMAL(19, 2) NOT NULL,
+    status VARCHAR(20) NOT NULL,
+
+    PRIMARY KEY (id)
+);
