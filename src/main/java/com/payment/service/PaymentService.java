@@ -3,6 +3,7 @@ package com.payment.service;
 import com.payment.dto.CreatePaymentRequest;
 import com.payment.dto.CreatePaymentResponse;
 import com.payment.dto.PaymentStatusResponse;
+import com.payment.dto.UpdatePaymentStatusRequest;
 
 public interface PaymentService {
 
@@ -21,4 +22,12 @@ public interface PaymentService {
      * @return current payment status
      */
     PaymentStatusResponse getPaymentStatus(Long paymentId);
+
+    /**
+     * Updates the status of an existing payment.
+     *
+     * @param paymentId payment identifier
+     * @param request new payment status
+     */
+    void updatePaymentStatus(Long paymentId, UpdatePaymentStatusRequest request);
 }

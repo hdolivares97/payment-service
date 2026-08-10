@@ -46,10 +46,8 @@ components:
       required:
         - paymentId
         - status
-        - occurredAt
 
       properties:
-
         paymentId:
           type: integer
           format: int64
@@ -58,12 +56,6 @@ components:
 
         status:
           $ref: '#/components/schemas/PaymentStatus'
-
-        occurredAt:
-          type: string
-          format: date-time
-          description: Date and time when the status change occurred
-          example: '2026-08-09T19:30:00Z'
 
     PaymentStatus:
       type: string

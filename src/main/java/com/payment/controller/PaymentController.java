@@ -3,6 +3,7 @@ package com.payment.controller;
 import com.payment.dto.CreatePaymentRequest;
 import com.payment.dto.CreatePaymentResponse;
 import com.payment.dto.PaymentStatusResponse;
+import com.payment.dto.UpdatePaymentStatusRequest;
 import com.payment.service.PaymentService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -39,5 +40,14 @@ public class PaymentController {
             @PathVariable @Min(1) Long paymentId) {
 
         return paymentService.getPaymentStatus(paymentId);
+    }
+
+    @PatchMapping("/{paymentId}/status")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updatePaymentStatus(
+            @PathVariable @Min(1) Long paymentId,
+            @Valid @RequestBody UpdatePaymentStatusRequest request) {
+
+        paymentService.updatePaymentStatus(paymentId, request);
     }
 }
