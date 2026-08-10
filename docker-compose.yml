@@ -31,6 +31,33 @@ services:
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
 
+  payment-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    container_name: payment-service
+
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+
+      DB_HOST: mysql
+      DB_PORT: 3306
+
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USER: ${RABBITMQ_USER}
+      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
+
+    ports:
+      - "8080:8080"
+
+    depends_on:
+      - mysql
+      - rabbitmq
+
 volumes:
   mysql_data:
   rabbitmq_data:
