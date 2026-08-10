@@ -1,0 +1,105 @@
+{
+  "info": {
+    "_postman_id": "aaa954ae-db93-450e-bd4d-6476731ccf34",
+    "name": "PAYMENT-API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "47960466"
+  },
+  "item": [
+    {
+      "name": "REGISTER PAYMENT",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"concept\": \"payment 5\",\n    \"payer\": \"Jess\",\n    \"payee\": \"Carly\",\n    \"amount\": 1000.00,\n    \"status\": \"PENDING\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/v1/payments",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "payments"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GET STATUS BY ID",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/v1/payments/5/status",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "payments",
+            "5",
+            "status"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "UPDATE STATUS",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"status\": \"COMPLETED\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/v1/payments/5/status",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "payments",
+            "5",
+            "status"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
