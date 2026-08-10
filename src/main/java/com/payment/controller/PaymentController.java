@@ -1,9 +1,6 @@
 package com.payment.controller;
 
-import com.payment.dto.CreatePaymentRequest;
-import com.payment.dto.CreatePaymentResponse;
-import com.payment.dto.PaymentStatusResponse;
-import com.payment.dto.UpdatePaymentStatusRequest;
+import com.payment.dto.*;
 import com.payment.service.PaymentService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
@@ -23,6 +20,12 @@ public class PaymentController {
         this.paymentService = paymentService;
     }
 
+    /**
+     * Creates a new payment.
+     *
+     * @param request payment creation data
+     * @return created payment information
+     */
     @PostMapping
     public ResponseEntity<CreatePaymentResponse> createPayment(
             @Valid @RequestBody CreatePaymentRequest request) {
@@ -35,6 +38,12 @@ public class PaymentController {
                 .body(response);
     }
 
+    /**
+     * Retrieves the current status of a payment.
+     *
+     * @param paymentId payment identifier
+     * @return current payment status
+     */
     @GetMapping("/{paymentId}/status")
     public PaymentStatusResponse getPaymentStatus(
             @PathVariable @Min(1) Long paymentId) {
@@ -42,6 +51,12 @@ public class PaymentController {
         return paymentService.getPaymentStatus(paymentId);
     }
 
+    /**
+     * Updates the status of an existing payment.
+     *
+     * @param paymentId payment identifier
+     * @param request new payment status
+     */
     @PatchMapping("/{paymentId}/status")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updatePaymentStatus(
