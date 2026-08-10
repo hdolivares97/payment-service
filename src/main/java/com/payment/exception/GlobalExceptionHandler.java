@@ -1,6 +1,7 @@
 package com.payment.exception;
 
 import com.payment.dto.ErrorResponse;
+import jakarta.validation.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -53,6 +54,46 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
+                .body(response);
+    }
+
+    /**
+     * Handles validation errors for request parameters.
+     *
+     * @param exception constraint violation exception
+     * @return error response with HTTP 400 status
+     */
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ErrorResponse> handleConstraintViolationException(
+            ConstraintViolationException exception) {
+
+        ErrorResponse response = new ErrorResponse(
+                "INVALID_REQUEST",
+                "Invalid payment identifier"
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(response);
+    }
+
+    /**
+     * Handles requests for payments that do not exist.
+     *
+     * @param exception payment not found exception
+     * @return error response with HTTP 404 status
+     */
+    @ExceptionHandler(PaymentNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handlePaymentNotFoundException(
+            PaymentNotFoundException exception) {
+
+        ErrorResponse response = new ErrorResponse(
+                "PAYMENT_NOT_FOUND",
+                exception.getMessage()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
                 .body(response);
     }
 
